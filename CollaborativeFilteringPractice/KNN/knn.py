@@ -28,7 +28,10 @@ def cos_similarity(user1_idx, user2_idx, rating_matrix):
     for idx in user2_valid_ratings_idx:
         sum3 += user2_ratings[idx] ** 2
 
-    return sum1 / math.sqrt(sum2 * sum3)
+    if (sum2 * sum3) != 0:
+        return sum1 / math.sqrt(sum2 * sum3)
+    else:
+        return 0
 
 
 def pearson_similarity(user1_idx, user2_idx, rating_matrix):
@@ -52,7 +55,16 @@ def pearson_similarity(user1_idx, user2_idx, rating_matrix):
         sum2 += (user1_ratings[idx] - user1_mean) ** 2
         sum3 += (user2_ratings[idx] - user2_mean) ** 2
 
-    return sum1 / math.sqrt(sum2 * sum3)
+    if (sum2 * sum3) != 0:
+        return sum1 / math.sqrt(sum2 * sum3)
+    else:
+        return 0
+
+
+def get_knn(k, similarity_array):
+
+    # Retornando índices dos k maiores valores da similaridade
+    return np.argsort(similarity_array)[-k:]
 
 
 # Abrindo arquivo de avaliações
@@ -69,5 +81,16 @@ for row in data.itertuples(index=False):
     movie_idx = row.movie_id - 1  # Ajustando o índice do filme
     rating_matrix[user_idx, movie_idx] = row.rating
 
-print(pearson_similarity(1, 2, rating_matrix))
-print(cos_similarity(1, 2, rating_matrix))
+pearson_similarity_array = np.full(num_users, 0.0)
+cos_similarity_array = np.full(num_users, 0.0)
+
+user_id_test = 1
+
+for idx in range(num_users):
+    if idx != user_id_test:
+        pearson_similarity_array[idx] = pearson_similarity(user_id_test, idx, rating_matrix)
+        cos_similarity_array[idx] = cos_similarity(user_id_test, idx, rating_matrix)
+
+print(get_knn(100, pearson_similarity_array))
+print(get_knn(100, cos_similarity_array))
+
