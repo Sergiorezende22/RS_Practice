@@ -68,7 +68,7 @@ def get_knn(k, similarity_array):
 
 
 # Abrindo arquivo de avaliações
-data = pd.read_csv('ml-100k/u.data', sep='\t', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'])
+data = pd.read_csv('../../data/ml-100k/u.data', sep='\t', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'])
 
 # Criando a matriz que relaciona as avaliações (usuários x filmes)
 num_users = data['user_id'].nunique()
